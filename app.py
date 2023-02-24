@@ -28,7 +28,7 @@ def transform_text(text):
   y.clear()
   for i in text:
     y.append(ps.stem(i))
-  return y
+  return " ".join(y)
 
 
 
@@ -43,11 +43,11 @@ if st.button("Predict"):
 
   transform_sms = transform_text(input_sms)
 
-  vector_input = tfidf.transform(transform_sms)
+  vector_input = tfidf.transform([transform_sms]).toarray()
 
   result  = model.predict(vector_input)[0]
 
-  if result >= 0.5:
+  if result == 1:
     st.header("Spam")
 
   else:
