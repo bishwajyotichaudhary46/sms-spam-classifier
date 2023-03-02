@@ -5,6 +5,8 @@ import sklearn
 import string
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
+from tensorflow.keras.models import load_model
+from keras.utils import pad_sequences
 
 
 ps = PorterStemmer()
@@ -34,12 +36,20 @@ def transform_text(text):
 
 tfidf = pickle.load(open("vectorizer.pkl", 'rb'))
 model = pickle.load(open('model.pkl', 'rb'))
+tokenizer = pickle.load(open('tokenizer.pkl','rb'))
+lstm_model = load_model("lstm_model.h5")
 
 st.title("Email/Spam Classifier")
 
 input_sms = st.text_input("Enter the message")
 
-if st.button("Predict"):
+
+
+
+
+st.title("Prediction Through ML")
+button1 = st.button("Predict by ML")
+if button1:
 
   transform_sms = transform_text(input_sms)
 
@@ -52,3 +62,22 @@ if st.button("Predict"):
 
   else:
     st.header("Not Spam")
+
+st.title("Prediction Through RNN_LSTM")
+button2 = st.button("Button by LSTM")
+if button2:
+  max_len = 150
+  transform_sms = transform_text(input_sms)
+
+  txt_sms = tokenizer.texts_to_sequences(transform_sms)
+  vector_input = pad_sequences(txt_sms, maxlen=max_len)
+
+  result = lstm_model.predict(vector_input)[0]
+
+
+  if result < 0:
+    st.header("Spam")
+
+  else:
+    st.header("Not Spam")
+
