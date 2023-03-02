@@ -8,7 +8,6 @@ from nltk.stem.porter import PorterStemmer
 from tensorflow.keras.models import load_model
 from keras.utils import pad_sequences
 
-
 ps = PorterStemmer()
 
 def transform_text(text):
